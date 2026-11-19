@@ -20,6 +20,12 @@ public class OrderView {
         return readInt("Enter your choice: ");
     }
 
+    public int showInsertMenu() {
+        System.out.println("\n1. Insert Sample Orders");
+        System.out.println("2. Insert Orders Manually (at least 3)");
+        return readInt("Choose insert option: ");
+    }
+
     public int readInt(String prompt) {
         while (true) {
             System.out.print(prompt);

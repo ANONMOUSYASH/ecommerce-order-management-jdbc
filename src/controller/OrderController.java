@@ -54,6 +54,32 @@ public class OrderController {
     }
 
     private void handleInsertOrders() throws SQLException {
+        int option = view.showInsertMenu();
+        switch (option) {
+            case 1:
+                insertSampleOrders();
+                break;
+            case 2:
+                insertManualOrders();
+                break;
+            default:
+                view.showMessage("Invalid insert choice. Please select 1 or 2.");
+        }
+    }
+
+    private void insertSampleOrders() throws SQLException {
+        Order[] samples = {
+            new Order(101, "Rahul Sharma", "Laptop", 3, 55000.0, "Pending"),
+            new Order(102, "Priya Verma", "Smartphone", 5, 25000.0, "Pending"),
+            new Order(103, "Amit Kumar", "Mouse", 2, 800.0, "Shipped"),
+            new Order(104, "Neha Gupta", "Keyboard", 4, 1500.0, "Cancelled")
+        };
+        for (Order order : samples) {
+            insertOrderWithFeedback(order);
+        }
+    }
+
+    private void insertManualOrders() throws SQLException {
         int count = view.readInt("How many orders to insert (minimum 3): ");
         if (count < 3) {
             view.showMessage("Please insert at least 3 order records.");
@@ -63,11 +89,15 @@ public class OrderController {
         for (int i = 1; i <= count; i++) {
             view.showMessage("\n--- Enter details for Order " + i + " ---");
             Order order = view.readOrder();
-            if (dao.insertOrder(order)) {
-                view.showMessage("Order ID " + order.getOrderId() + " inserted successfully.");
-            } else {
-                view.showMessage("Duplicate Order ID " + order.getOrderId() + "! Record skipped.");
-            }
+            insertOrderWithFeedback(order);
+        }
+    }
+
+    private void insertOrderWithFeedback(Order order) throws SQLException {
+        if (dao.insertOrder(order)) {
+            view.showMessage("Order ID " + order.getOrderId() + " inserted successfully.");
+        } else {
+            view.showMessage("Duplicate Order ID " + order.getOrderId() + "! Record skipped.");
         }
     }
 
